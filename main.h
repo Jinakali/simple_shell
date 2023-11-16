@@ -6,16 +6,16 @@
 #include <stdlib.h>
 #include <string.h>
 /**
-  *struct list_path-singly linked list
-  *@data: string-(malloced)
-  *@next: points to the next node
-  *
-  *Description: singly linked list node structure of PATH
-    */
+ *struct list_path-singly linked list
+ *@data: string-(malloced)
+ *@next: points to the next node
+ *
+ *Description: singly linked list node structure of PATH
+ */
 typedef struct list_path
 {
-		char *data;
-			struct list_path *next;
+	char *data;
+	struct list_path *next;
 } list_p;
 
 extern char **environ;
@@ -31,4 +31,6 @@ list_p *add_node_end(list_p **head, char *path);
 list_p *create_path_list(void);
 int _setenv(const char *name, const char *value, int overwrite);
 void error_msg(void);
+char *search_path(char *file_path, char *path_copy, char *file_name);
+char *find_file_path(char *file_name);
 #endif/*main.h*/

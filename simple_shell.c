@@ -9,7 +9,7 @@ int main(void)
 {
 	pid_t child_pid;
 	int wstatus, length;
-	char **command, *delim = " ", *lineptr = NULL;
+	char **command, *delim = " ", *lineptr = NULL, *file_path;
 	size_t n = 0;
 
 	if (isatty(STDIN_FILENO))
@@ -21,14 +21,16 @@ int main(void)
 		command = str_2words(lineptr, delim);
 		if (command == NULL)
 			error_msg();
+		file_path = find_file_path(command[0]);
+		if (file_path == NULL)
+			error_msg();
 		child_pid = fork();
 		if (child_pid == -1)
 			error_msg();
 		if (child_pid == 0)
 		{
-			if ((execve(command[0], command, environ)) == -1)
+			if ((execve(file_path, command, environ)) == -1)
 				error_msg();
-
 		}
 		else
 		{
@@ -37,6 +39,7 @@ int main(void)
 		if (isatty(STDIN_FILENO))
 			printf("($) ");
 		free_arr(command);
+		free(file_path);
 	}
 	if (isatty(STDIN_FILENO))
 		putchar('\n');
