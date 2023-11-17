@@ -21,12 +21,15 @@ int main(void)
 		if (check == 0)
 		{
 			command = input_tokenisation(command, file_path, lineptr);
-			file_path = is_file_path(command, file_path, lineptr);
-			command_execution(command, file_path, lineptr);
-			if (isatty(STDIN_FILENO))
-				printf("($) ");
-			free_arr(command);
-			free(file_path);
+			if (is_builtin(command[0]) != 0)
+			{
+				file_path = is_file_path(command, file_path, lineptr);
+				command_execution(command, file_path, lineptr);
+				if (isatty(STDIN_FILENO))
+					printf("($) ");
+				free_arr(command);
+				free(file_path);
+			}
 		}
 		else
 		{

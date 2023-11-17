@@ -37,4 +37,19 @@ int is_blank(char *lineptr);
 void command_execution(char **command, char *file_path, char *lineptr);
 char *is_file_path(char **command, char *file_path, char *lineptr);
 char **input_tokenisation(char **command, char *file_path, char *lineptr);
+/**
+ *struct builtin - structure of builtin command string and functionpoiner
+ *@command: builin comand string
+ *@function: pointer to builtin command programs
+ *Description: structure of builtin command string and functionpoiner
+ */
+typedef struct builtin
+{
+	char *command;
+	void (*function)(void);
+} builtin;
+int is_builtin(char *s);
+int s_cmd_compare(char *cmd, char *s);
+void env(void);
+void custom_exit(void);
 #endif/*main.h*/
