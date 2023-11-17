@@ -7,9 +7,8 @@
  */
 int main(void)
 {
-	pid_t child_pid;
-	int wstatus, length;
-	char **command, *delim = " ", *lineptr = NULL, *file_path;
+	int length, check;
+	char **command, *lineptr = NULL, *file_path;
 	size_t n = 0;
 
 	if (isatty(STDIN_FILENO))
@@ -18,28 +17,22 @@ int main(void)
 	{
 		length = strlen(lineptr);
 		lineptr[length - 1] = '\0';/*remove enter (== /n) character*/
-		command = str_2words(lineptr, delim);
-		if (command == NULL)
-			error_msg();
-		file_path = find_file_path(command[0]);
-		if (file_path == NULL)
-			error_msg();
-		child_pid = fork();
-		if (child_pid == -1)
-			error_msg();
-		if (child_pid == 0)
+		check = is_blank(lineptr);
+		if (check == 0)
 		{
-			if ((execve(file_path, command, environ)) == -1)
-				error_msg();
+			command = input_tokenisation(command, file_path, lineptr);
+			file_path = is_file_path(command, file_path, lineptr);
+			command_execution(command, file_path, lineptr);
+			if (isatty(STDIN_FILENO))
+				printf("($) ");
+			free_arr(command);
+			free(file_path);
 		}
 		else
 		{
-			wait(&wstatus);
+			if (isatty(STDIN_FILENO))
+				printf("($) ");
 		}
-		if (isatty(STDIN_FILENO))
-			printf("($) ");
-		free_arr(command);
-		free(file_path);
 	}
 	if (isatty(STDIN_FILENO))
 		putchar('\n');
@@ -53,4 +46,23 @@ void error_msg(void)
 {
 	perror("./hsh");
 	exit(EXIT_FAILURE);
+}
+/**
+ *is_blank-check whether input is etirely composed of blank lines
+ *@lineptr:input
+ *Return: 0 if other characters present
+ */
+int is_blank(char *lineptr)
+{
+	int i = 0;
+
+	if (lineptr == NULL)
+		return (-1);
+	while (lineptr[i] != '\0')
+	{
+		if (lineptr[i] != ' ')
+			return (0);
+		i++;
+	}
+	return (-1);
 }

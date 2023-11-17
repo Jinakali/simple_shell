@@ -33,4 +33,8 @@ int _setenv(const char *name, const char *value, int overwrite);
 void error_msg(void);
 char *search_path(char *file_path, char *path_copy, char *file_name);
 char *find_file_path(char *file_name);
+int is_blank(char *lineptr);
+void command_execution(char **command, char *file_path, char *lineptr);
+char *is_file_path(char **command, char *file_path, char *lineptr);
+char **input_tokenisation(char **command, char *file_path, char *lineptr);
 #endif/*main.h*/
